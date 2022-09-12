@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Template that sets up an IAM user, IAM roles and an IAM group to facilitate developer access to the AWS account.
+
+Parameters:
+  UserName:
+    Type: String
+    Description: "The name of the IAM user to create (e.g., `<first-name>.<last-name>`)"
+    AllowedPattern: ^[a-z0-9.]+$
+
+  NamePrefix:
+    Type: String
+    Default: "capra"
+    Description: "A prefix to use when naming the IAM roles and group"
+    MinLength: 1
+
+Resources:
+  User:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref UserName
+      Groups:
+        - !Ref AdminGroup
+      Path: "/"
+
+  DeveloperRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${NamePrefix}-developer"
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: true
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/ReadOnlyAccess"
+
+  AdminRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${NamePrefix}-admin"
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: true
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+      Policies:
+        - PolicyName: "policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Action:
+                  - "aws-portal:Modify*"
+                Resource:
+                  - "*"
+
+  AdminGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Sub "${NamePrefix}-admin-group"
+      Path: "/"
+      Policies:
+        - PolicyName: "policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sts:AssumeRole"
+                Resource:
+                  - !GetAtt AdminRole.Arn
+                  - !GetAtt DeveloperRole.Arn
