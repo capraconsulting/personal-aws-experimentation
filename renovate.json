@@ -1,0 +1,12 @@
+{
+  "extends": ["config:base"],
+  "automerge": false,
+  "regexManagers": [
+    {
+      "fileMatch": [".tool-versions"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\sterraform\\s*(?<currentValue>.*)\\s"
+      ]
+    }
+  ]
+}
