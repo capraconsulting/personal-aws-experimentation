@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.3.6"
+  required_version = "1.4.2"
   backend "s3" {
     key            = "capra-playground/state.tfstate"
     bucket         = "<account-id>-terraform-state" # TODO: Din AWS konto-ID.
