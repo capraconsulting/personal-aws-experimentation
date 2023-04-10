@@ -21,6 +21,7 @@ provider "aws" {
 
 locals {
   name_prefix = "capra-playground"
+  email       = "<email>" # TODO: Din e-post
   tags = {
     project   = local.name_prefix
     terraform = true
@@ -35,12 +36,18 @@ resource "aws_budgets_budget" "this" {
   time_period_end   = "2087-06-15_00:00"
   time_period_start = "2017-07-01_00:00"
   time_unit         = "MONTHLY"
-
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = [local.email]
+  }
   notification {
     comparison_operator        = "GREATER_THAN"
     threshold                  = 100
     threshold_type             = "PERCENTAGE"
     notification_type          = "FORECASTED"
-    subscriber_email_addresses = ["<email>"] # TODO: Din e-post
+    subscriber_email_addresses = [local.email]
   }
 }
