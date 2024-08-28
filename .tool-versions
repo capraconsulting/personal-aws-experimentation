@@ -1,2 +1,2 @@
 # renovate: datasource=github-releases depName=hashicorp/terraform extractVersion=v(?<version>.*)$
-terraform 1.4.2
+terraform 1.9.5
