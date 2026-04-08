@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  validate-terraform:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: tf-version
+        run: echo "version=$(grep terraform .tool-versions | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+        working-directory: .
+
+      - uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
+        with:
+          terraform_version: ${{ steps.tf-version.outputs.version }}
+
+      - run: terraform init -backend=false
+
+      - run: terraform validate
