@@ -31,7 +31,7 @@ locals {
 resource "aws_budgets_budget" "this" {
   name              = "${local.name_prefix}-monthly"
   budget_type       = "COST"
-  limit_amount      = "50"
+  limit_amount      = "20"
   limit_unit        = "USD"
   time_period_end   = "2087-06-15_00:00"
   time_period_start = "2017-07-01_00:00"
