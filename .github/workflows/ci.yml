@@ -10,7 +10,7 @@ jobs:
       run:
         working-directory: terraform
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - id: tf-version
         run: echo "version=$(grep '^terraform ' .tool-versions | awk '{print $2}')" >> "$GITHUB_OUTPUT"
