@@ -88,7 +88,7 @@ Filen [cloudformation/cfn-developer-access.yml](cloudformation/cfn-developer-acc
      --template-body file://cloudformation/cfn-tf-bootstrap.yml \
      && aws cloudformation wait \
        stack-create-complete \
-       --stack-name "capra-tf-bootstrap" \
+       --stack-name "capra-tf-bootstrap"
    ```
 1. Følg guiden i [terraform](terraform/).
 
