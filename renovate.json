@@ -1,12 +1,26 @@
 {
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "automerge": false,
+  "minimumReleaseAge": "7 days",
   "regexManagers": [
     {
       "fileMatch": [".tool-versions"],
       "matchStrings": [
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\sterraform\\s*(?<currentValue>.*)\\s"
       ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["terraform"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["regex"],
+      "matchPackageNames": ["hashicorp/terraform"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
